@@ -20,8 +20,12 @@ class HomeTableTableViewController: UITableViewController {
         loadTweet()
         myRefreshControl.addTarget(self, action: #selector(loadTweet), for: .valueChanged)
         tableView.refreshControl = myRefreshControl
+        
     }
-    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.loadTweet()
+    }
     @objc func loadTweet(){
         numberOfTweet = 20
         let myUrl = "https://api.twitter.com/1.1/statuses/home_timeline.json"
@@ -59,6 +63,9 @@ class HomeTableTableViewController: UITableViewController {
         if indexPath.row + 1 == tweetArray.count{
             loadMoreTweets()
         }
+        //self.tweetTable.rowHeight = UITableView.automaticDimension
+        //self.tweetTable.estimatedRowHeight = 150
+        
     }
     
     
@@ -82,6 +89,15 @@ class HomeTableTableViewController: UITableViewController {
         if let imageData = data {
             cell.profileImageView.image = UIImage(data: imageData)
         }
+        
+        cell.setFavorite(tweetArray[indexPath.row]["favorited"] as! Bool)
+        
+        cell.tweetId = tweetArray[indexPath.row]["id"] as! Int
+        
+        cell.setRetweeted( tweetArray[indexPath.row]["retweeted"] as! Bool)
+        
+        
+        
  
         return cell
     }
